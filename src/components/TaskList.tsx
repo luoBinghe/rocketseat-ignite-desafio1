@@ -16,16 +16,36 @@ export function TaskList() {
 
   function handleCreateNewTask() {
     // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
+    if(!newTaskTitle){
+      window.alert('Informe o título da tarefa!')
+      return
+    }else {
+      const newTask = {
+        id: Math.random(),
+        title: newTaskTitle,
+        isComplete: false
+      }
+
+      setTasks(oldState => [...oldState, newTask] )
+    }
+    setNewTaskTitle('')
   }
 
   function handleToggleTaskCompletion(id: number) {
     // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
+    const checkTask = tasks.map(a => a.id === id ? {
+      ...a,
+      isComplete: !a.isComplete
+    } : a)
+    setTasks(checkTask)
   }
 
   function handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
+    const removeTask = tasks.filter(a => a.id !== id)
+    setTasks(removeTask)
   }
-
+  console.log(tasks)
   return (
     <section className="task-list container">
       <header>
@@ -51,6 +71,7 @@ export function TaskList() {
               <div className={task.isComplete ? 'completed' : ''} data-testid="task" >
                 <label className="checkbox-container">
                   <input 
+                    key={task.id}
                     type="checkbox"
                     readOnly
                     checked={task.isComplete}
